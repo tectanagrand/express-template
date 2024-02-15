@@ -11,17 +11,11 @@ class DbConn {
       waitForConnections: true,
       connectionLimit: 10,
       maxIdle: 10,
-      idleTimeout: 60000,
-      queueLimit: 0,
+      idleTimeout: 3 * 1000,
       enableKeepAlive: true,
       keepAliveInitialDelay: 0,
       multipleStatements: false,
     });
-    this.trasaction = {
-      BEGIN: "BEGIN",
-      COMMIT: "COMMIT",
-      ROLLBACK: "ROLLBACK",
-    };
   }
 
   async init() {
@@ -142,16 +136,18 @@ class DbConn {
     }
   }
 
-  async insertQuery(value, to_table) {
+  insertQuery(value, to_table) {
     let query = "";
     const startQuery = "INSERT INTO ";
     let arrayVal = [];
     let arrayOfparam = [];
+    console.log(value);
     const arrayOfValkey = Object.keys(value).map((item) => {
       arrayVal.push(value[item]);
       arrayOfparam.push("?");
       return item;
     });
+    console.log(arrayOfValkey);
     query =
       startQuery +
       to_table +
@@ -161,7 +157,7 @@ class DbConn {
     return [query, arrayVal];
   }
 
-  async updateQuery(value, where, table) {
+  updateQuery(value, where, table) {
     let query = "";
     const startQuery = "UPDATE ";
     let arrayVal = [];
@@ -184,7 +180,7 @@ class DbConn {
     return [query, arrayVal];
   }
 
-  async deleteQuery(where, table) {
+  deleteQuery(where, table) {
     let query = "";
     let arrayOfVal = [];
     const arrayOfWhere = Object.keys(where).map((item) => {
